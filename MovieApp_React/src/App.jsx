@@ -7,7 +7,7 @@ import MoreRatedMovieSlide from "./components/MoreRatedMovie.jsx";
 import {useDebounce} from 'react-use';
 import {updateSearchCount} from './appwrite'
 import {getTrendingMovies} from './appwrite'
-import { API_BASE_URL, API_OPTIONS } from './apiConfig';
+import {API_BASE_URL, API_OPTIONS} from './apiConfig';
 
 
 const App = () => {
@@ -20,22 +20,43 @@ const App = () => {
     const [mostTrendingMovie, setMostTrendingMovie] = useState([]);
 
     useDebounce(() => setDebouncedSearchTerm(searchTerm), 500, [searchTerm])
-    const fetchMovies = async (query = '') => {
+
+    const fetchTrendingMovie = async () => {
+        setIsLoading(true);
+        setErrorMessage('');
+        try {
+            const mostTrendingMovieResponse = await fetch(`${API_BASE_URL}/trending/movie/day`, API_OPTIONS);
+
+            if (!mostTrendingMovieResponse.ok) {
+                throw new Error('failed')
+            }
+            const mostTrendingMovieData = await mostTrendingMovieResponse.json();
+
+            if (mostTrendingMovieData.response === 'false') {
+                setErrorMessage(mostTrendingMovieData.Error || 'failed to fetch trending movie');
+                setMostTrendingMovie([]);
+                return;
+            }
+
+            setMostTrendingMovie(mostTrendingMovieData.results[0] || []);
+        } catch (error) {
+            console.log(error);
+        }
+
+    }
+    const fetchAllMovies = async (query = '') => {
         setIsLoading(true);
         setErrorMessage('');
         try {
             const endPoint = query
                 ? `${API_BASE_URL}/search/movie?query=${encodeURIComponent(query)}`
                 : `${API_BASE_URL}/discover/movie?sort_by=popularity.desc`
-            const response = await fetch(endPoint, API_OPTIONS)
-            const mostTrendingMovieResponse = await fetch(`https://api.themoviedb.org/3/trending/movie/day`, API_OPTIONS);
+            const response = await fetch(endPoint, API_OPTIONS);
+
             if (!response.ok) {
                 throw new Error('failed')
             }
-            if (!mostTrendingMovieResponse.ok) {
-                throw new Error('failed')
-            }
-            const mostTrendingMovieData = await mostTrendingMovieResponse.json();
+
             const data = await response.json();
 
             if (data.response === 'false') {
@@ -43,12 +64,7 @@ const App = () => {
                 setMovieList([]);
                 return;
             }
-            if (mostTrendingMovieData.response === 'false') {
-                setErrorMessage(mostTrendingMovieData.Error || 'failed to fetch movies');
-                setMostTrendingMovie([]);
-                return;
-            }
-            setMostTrendingMovie(mostTrendingMovieData.results[0] || []);
+
             setMovieList(data.results || []);
             if (query && data.results.length > 0) {
                 await updateSearchCount(query, data.results[0]);
@@ -70,11 +86,12 @@ const App = () => {
         }
     }
     useEffect(() => {
-        fetchMovies(debouncedSearchTerm);
+        fetchAllMovies(debouncedSearchTerm);
     }, [debouncedSearchTerm])
 
     useEffect(() => {
         loadTrendingMovies();
+        fetchTrendingMovie();
     }, [])
 
     return (
@@ -83,7 +100,6 @@ const App = () => {
                 < MoreRatedMovieSlide movie={mostTrendingMovie}/>
             </header>
             <div className='wrapper pt-0'>
-
 
 
                 {/*{trendingMovies.length>0 &&(*/}
@@ -124,5 +140,4 @@ const App = () => {
     )
 }
 
-export function fetchMovies() {}
 export default App
