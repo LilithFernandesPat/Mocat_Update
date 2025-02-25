@@ -50,7 +50,6 @@ const App = () => {
             }
             setMostTrendingMovie(mostTrendingMovieData.results[0] || []);
             setMovieList(data.results || []);
-
             if (query && data.results.length > 0) {
                 await updateSearchCount(query, data.results[0]);
             }
