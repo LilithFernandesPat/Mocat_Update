@@ -79,18 +79,34 @@
         @apply bg-cover bg-center h-auto w-full sm:min-h-[300px] md:min-h-[500px] grid grid-cols-8 bg-fixed ;
 
         & .slideContent {
-            @apply lg:col-span-6 md:p-4 md:col-span-full content-center max-w-3/4 mb-40 z-10 ;
+            @apply lg:col-span-6 flex-row md:p-4 md:col-span-full content-center max-w-3/4 mb-40 z-10 ;
         }
 
         & p {
             @apply backdrop-blur-sm;
         }
 
-        & img {
+        & .slide_poster {
             @apply hidden lg:block lg:max-w-64 lg:col-span-2 mb-9 rounded-xl p-2 shadow-inner shadow-red-950 z-0 block self-end content-center;
         }
+    }
+    .show_more_button {
+        @apply relative text-xl bg-[linear-gradient(#262626,#262626),linear-gradient(#8e0606,#8e0606)] bg-[length:100%_2px,0_2px] bg-[position:100%_100%,0_100%] bg-no-repeat text-white transition-[background-size,color] duration-500 hover:bg-[0_2px,100%_2px] hover:text-[#8e0606];
 
     }
+    .rating {
+        @apply flex flex-row items-center gap-1;
+    }
+
+    & .rating img {
+        @apply size-4 object-contain;
+    }
+
+    & .rating p {
+        @apply font-bold text-base text-white;
+    }
+
+
     .searchTermsContainer {
         @apply grid grid-cols-6 justify-center;
     }
@@ -150,17 +166,7 @@
             @apply mt-2 flex flex-row items-center flex-wrap gap-2;
         }
 
-        & .rating {
-            @apply flex flex-row items-center gap-1;
-        }
 
-        & .rating img {
-            @apply size-4 object-contain;
-        }
-
-        & .rating p {
-            @apply font-bold text-base text-white;
-        }
 
         & .content span {
             @apply text-sm text-penn-red;

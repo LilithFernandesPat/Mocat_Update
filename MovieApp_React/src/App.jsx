@@ -6,11 +6,11 @@ import './App.css'
 import Search from './components/search'
 import Spinner from './components/Spinner'
 import MovieCard from './components/MovieCard'
-import MoreRatedMovieSlide from "./components/MoreRatedMovie.jsx";
+import MoreRatedMovieBackdrop from "./components/MoreRatedMovie.jsx";
 import sortByMenu from "./components/SortByMenu.jsx";
 import {API_BASE_URL, API_OPTIONS} from './apiConfig';
 import SortByMenu from "./components/SortByMenu.jsx";
-
+import ShowMoreMovies from "./components/ShowMoreMovies.jsx";
 
 const App = () => {
     const [searchTerm, setSearchTerm] = useState('');
@@ -21,7 +21,7 @@ const App = () => {
     const [trendingMovies, setTrendingMovies] = useState([]);
     const [mostTrendingMovie, setMostTrendingMovie] = useState([]);
     const [sortBy, setSortBy] = useState("popularity.desc");
-    const [page, setPage] = useState('');
+    const [page, setPage] = useState(1);
 
     useDebounce(() => setDebouncedSearchTerm(searchTerm), 500, [searchTerm])
 
@@ -53,8 +53,8 @@ const App = () => {
         setErrorMessage('');
         try {
             const endPoint = query
-                ? `${API_BASE_URL}/search/movie?query=${encodeURIComponent(query)}`
-                : `${API_BASE_URL}/discover/movie?sort_by=${sortBy}`
+                ? `${API_BASE_URL}/search/movie?page=${nextPage}&query=${encodeURIComponent(query)}`
+                : `${API_BASE_URL}/discover/movie?page=${nextPage}&sort_by=${sortBy}`
             const response = await fetch(endPoint, API_OPTIONS);
 
             if (!response.ok) {
@@ -82,6 +82,7 @@ const App = () => {
             setIsLoading(false);
         }
     }
+
     const loadTrendingMovies = async () => {
         try {
             const movies = await getTrendingMovies();
@@ -90,9 +91,11 @@ const App = () => {
             console.error(`Error fetching trending movies: ${error}`);
         }
     }
+
+
     useEffect(() => {
-        fetchAllMovies(debouncedSearchTerm);
-    }, [debouncedSearchTerm, sortBy])
+        fetchAllMovies(debouncedSearchTerm, page);
+    }, [debouncedSearchTerm, sortBy, page])
 
     useEffect(() => {
         loadTrendingMovies();
@@ -102,7 +105,7 @@ const App = () => {
     return (
         <main>
             <header className='m-0'>
-                < MoreRatedMovieSlide movie={mostTrendingMovie}/>
+                < MoreRatedMovieBackdrop movie={mostTrendingMovie}/>
             </header>
 
             <div className='wrapper pt-0'>
@@ -141,7 +144,7 @@ const App = () => {
                             ))}
                         </ul>
                     )}
-
+                    <ShowMoreMovies page={page} setPage={setPage} />
                 </section>
             </div>
 
