@@ -1,13 +1,15 @@
 import {useEffect, useState} from 'react'
+import {useDebounce} from 'react-use';
+import {updateSearchCount} from './appwrite'
+import {getTrendingMovies} from './appwrite'
 import './App.css'
 import Search from './components/search'
 import Spinner from './components/Spinner'
 import MovieCard from './components/MovieCard'
 import MoreRatedMovieSlide from "./components/MoreRatedMovie.jsx";
-import {useDebounce} from 'react-use';
-import {updateSearchCount} from './appwrite'
-import {getTrendingMovies} from './appwrite'
+import sortByMenu from "./components/SortByMenu.jsx";
 import {API_BASE_URL, API_OPTIONS} from './apiConfig';
+import SortByMenu from "./components/SortByMenu.jsx";
 
 
 const App = () => {
@@ -18,6 +20,8 @@ const App = () => {
     const [debouncedSearchTerm, setDebouncedSearchTerm] = useState('');
     const [trendingMovies, setTrendingMovies] = useState([]);
     const [mostTrendingMovie, setMostTrendingMovie] = useState([]);
+    const [sortBy, setSortBy] = useState("popularity.desc");
+    const [page, setPage] = useState('');
 
     useDebounce(() => setDebouncedSearchTerm(searchTerm), 500, [searchTerm])
 
@@ -44,13 +48,13 @@ const App = () => {
         }
 
     }
-    const fetchAllMovies = async (query = '') => {
+    const fetchAllMovies = async (query = '', nextPage=1) => {
         setIsLoading(true);
         setErrorMessage('');
         try {
             const endPoint = query
                 ? `${API_BASE_URL}/search/movie?query=${encodeURIComponent(query)}`
-                : `${API_BASE_URL}/discover/movie?sort_by=popularity.desc`
+                : `${API_BASE_URL}/discover/movie?sort_by=${sortBy}`
             const response = await fetch(endPoint, API_OPTIONS);
 
             if (!response.ok) {
@@ -65,7 +69,8 @@ const App = () => {
                 return;
             }
 
-            setMovieList(data.results || []);
+            setMovieList(prevMovies => nextPage === 1 ? data.results : [...prevMovies, ...data.results]);
+
             if (query && data.results.length > 0) {
                 await updateSearchCount(query, data.results[0]);
             }
@@ -87,7 +92,7 @@ const App = () => {
     }
     useEffect(() => {
         fetchAllMovies(debouncedSearchTerm);
-    }, [debouncedSearchTerm])
+    }, [debouncedSearchTerm, sortBy])
 
     useEffect(() => {
         loadTrendingMovies();
@@ -99,8 +104,8 @@ const App = () => {
             <header className='m-0'>
                 < MoreRatedMovieSlide movie={mostTrendingMovie}/>
             </header>
-            <div className='wrapper pt-0'>
 
+            <div className='wrapper pt-0'>
 
                 {/*{trendingMovies.length>0 &&(*/}
 
@@ -116,9 +121,12 @@ const App = () => {
                 {/*  </ul>*/}
                 {/*</section>*/}
                 {/*)}*/}
-                <section className='all-movies'>
-                    <Search searchTerm={searchTerm} setSearchTerm={setSearchTerm}/>
 
+                <section className='all-movies'>
+                    <div className='searchTermsContainer'>
+                            <Search  searchTerm={searchTerm} setSearchTerm={setSearchTerm}/>
+                            <SortByMenu sortBy={sortBy} setSortBy={setSortBy} />
+                    </div>
 
                     <h2>All Movies</h2>
 
@@ -133,6 +141,7 @@ const App = () => {
                             ))}
                         </ul>
                     )}
+
                 </section>
             </div>
 
