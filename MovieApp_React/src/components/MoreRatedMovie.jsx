@@ -17,7 +17,7 @@ const MoreRatedMovieBackdrop = ({
                                 }) => {
     const [movieBackdrop, setMovieBackdrop] = useState([])
     const [genres, setGenres] = useState([])
-
+    console.log(id)
     const fetchImages = async (movieID) => {
         if (!movieID) return;
 
@@ -75,9 +75,9 @@ const MoreRatedMovieBackdrop = ({
                         <p className='text-xl font-extrabold hidden sm:block'>
                             {release_date ? release_date.split('-')[0] : 'N/A'}
                         </p>
-                        <p className='font-black text-red-900 text-xl uppercase hidden sm:block'>
+                        <span className='font-black text-red-900 text-xl uppercase hidden sm:block'>
                             {genres ? genres.join(' • ') : 'N/A'}
-                        </p>
+                      </span>
                     </div>
                     <h2 className='text-7xl pt-2 pb-2 uppercase '>{title}</h2>
                     <p className='text-0.5 hidden lg:block md:block'>

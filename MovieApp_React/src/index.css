@@ -79,7 +79,7 @@
         @apply bg-cover bg-center h-auto w-full sm:min-h-[300px] md:min-h-[500px] grid grid-cols-8 bg-fixed ;
 
         & .slideContent {
-            @apply lg:col-span-6 flex-row md:p-4 md:col-span-full content-center max-w-3/4 mb-40 z-10 ;
+            @apply lg:col-span-6 flex-row md:p-4 col-span-full content-center max-w-3/4 mb-40 z-10 ;
         }
 
         & p {

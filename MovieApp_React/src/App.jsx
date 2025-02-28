@@ -7,7 +7,6 @@ import Search from './components/search'
 import Spinner from './components/Spinner'
 import MovieCard from './components/MovieCard'
 import MoreRatedMovieBackdrop from "./components/MoreRatedMovie.jsx";
-import sortByMenu from "./components/SortByMenu.jsx";
 import {API_BASE_URL, API_OPTIONS} from './apiConfig';
 import SortByMenu from "./components/SortByMenu.jsx";
 import ShowMoreMovies from "./components/ShowMoreMovies.jsx";
@@ -48,7 +47,7 @@ const App = () => {
         }
 
     }
-    const fetchAllMovies = async (query = '', nextPage=1) => {
+    const fetchAllMovies = async (query = '', nextPage = 1) => {
         setIsLoading(true);
         setErrorMessage('');
         try {
@@ -95,13 +94,15 @@ const App = () => {
 
     useEffect(() => {
         fetchAllMovies(debouncedSearchTerm, page);
-    }, [debouncedSearchTerm, sortBy, page])
+    }, [sortBy, page, debouncedSearchTerm])
 
     useEffect(() => {
         loadTrendingMovies();
         fetchTrendingMovie();
     }, [])
-
+    useEffect(() => {
+        setPage(1);
+    }, [sortBy, debouncedSearchTerm]);
     return (
         <main>
             <header className='m-0'>
@@ -124,27 +125,24 @@ const App = () => {
                 {/*  </ul>*/}
                 {/*</section>*/}
                 {/*)}*/}
-
                 <section className='all-movies'>
                     <div className='searchTermsContainer'>
-                            <Search  searchTerm={searchTerm} setSearchTerm={setSearchTerm}/>
-                            <SortByMenu sortBy={sortBy} setSortBy={setSortBy} />
+                        <Search searchTerm={searchTerm} setSearchTerm={setSearchTerm}/>
+                        <SortByMenu sortBy={sortBy} setSortBy={setSortBy}/>
                     </div>
 
                     <h2>All Movies</h2>
-
+                    <ul>
+                        {movieList.map((movie) => (
+                            <MovieCard key={movie.id} movie={movie}/>
+                        ))}
+                    </ul>
                     {isLoading ? (
-                        <Spinner/>
-                    ) : errorMessage ? (
-                        <p className='text-red-500'>{errorMessage}</p>
-                    ) : (
-                        <ul>
-                            {movieList.map((movie) => (
-                                <MovieCard key={movie.id} movie={movie}/>
-                            ))}
-                        </ul>
-                    )}
-                    <ShowMoreMovies page={page} setPage={setPage} />
+                            <Spinner />
+                        ):
+                        errorMessage
+                    }
+                    <ShowMoreMovies page={page} setPage={setPage}/>
                 </section>
             </div>
 
