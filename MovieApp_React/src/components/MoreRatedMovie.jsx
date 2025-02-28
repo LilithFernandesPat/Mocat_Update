@@ -1,5 +1,6 @@
 import React, {useEffect, useState} from 'react'
 import {API_BASE_URL, API_OPTIONS} from '../apiConfig';
+import {useNavigate} from "react-router-dom";
 
 
 const MoreRatedMovieBackdrop = ({
@@ -17,7 +18,11 @@ const MoreRatedMovieBackdrop = ({
                                 }) => {
     const [movieBackdrop, setMovieBackdrop] = useState([])
     const [genres, setGenres] = useState([])
-    console.log(id)
+    const [trailerId, setTrailerId] = useState([])
+    const navigate = useNavigate();
+    const onMovieClick = (id) => {
+        navigate(`/moviepage?movie.id=${id}`);
+    }
     const fetchImages = async (movieID) => {
         if (!movieID) return;
 
@@ -30,6 +35,7 @@ const MoreRatedMovieBackdrop = ({
 
             const data = await response.json();
             setMovieBackdrop(data.backdrops[0] || []);
+
         } catch (error) {
             console.error("Erro ao buscar imagens:", error);
         }
@@ -52,23 +58,37 @@ const MoreRatedMovieBackdrop = ({
             console.error("Erro ao buscar generos:", error);
         }
     }
+    const fetchTrailer = async (movieID) => {
+        if (!movieID) return;
+        const responseTrailer = await fetch(`${API_BASE_URL}/movie/${movieID}/videos?language=en-US`, API_OPTIONS);
 
+        if (!responseTrailer.ok) {
+            throw new Error('Failed to fetch trailers');
+        }
+
+        const dataTrailer = await responseTrailer.json();
+        setTrailerId(dataTrailer.results[0] || []);
+
+        console.log(dataTrailer.results);
+
+    }
     useEffect(() => {
         fetchImages(id);
         fetchGenre(genre_ids);
+        fetchTrailer(id)
     }, [id]);
-
-
     return (
 
         <div className="slide"
              style={{
                  backgroundImage: `url(${movieBackdrop.file_path ? `https://image.tmdb.org/t/p/original/${movieBackdrop.file_path}` : '/no-movie.png'})`,
              }}>
-            <img className='slide_poster'
+
+                <img className='slide_poster'
                  src={poster_path ? `https://image.tmdb.org/t/p/w500/${poster_path}` : '/no-movie.png'}
                  alt={title}
             />
+
             <div className='slideContent w-full h-full'>
                 <div className='justify-start text-white'>
                     <div className='flex justify-between '>
@@ -79,12 +99,20 @@ const MoreRatedMovieBackdrop = ({
                             {genres ? genres.join(' • ') : 'N/A'}
                       </span>
                     </div>
-                    <h2 className='text-7xl pt-2 pb-2 uppercase '>{title}</h2>
+                    <h2 className='text-7xl pt-2 pb-2 uppercase '> <button className='hover:text-8xl hover:text-red-900 transition-all' onClick={() => onMovieClick(id)}>{title}</button></h2>
                     <p className='text-0.5 hidden lg:block md:block'>
                         {overview ? overview : 'N/A'}
                     </p>
                 </div>
+
                 <div className='rating text-white justify-self-end  mt-10 font-extrabold gap-3'>
+                    <div className='watch_trailer'>
+                        <a href={`https://www.youtube.com/watch?v=${trailerId.key}`} target='_blank'>
+                        <button>
+                            <img src="play-button.svg" alt=""/>Watch trailer
+                        </button>
+                    </a>
+                    </div>
                     <img src="star.svg" alt="star_icon"/>
                     {vote_average ? vote_average.toFixed(1) : 'N/A'}
                     <span>•</span>

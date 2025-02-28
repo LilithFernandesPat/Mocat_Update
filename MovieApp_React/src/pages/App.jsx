@@ -1,17 +1,19 @@
 import {useEffect, useState} from 'react'
 import {useDebounce} from 'react-use';
-import {updateSearchCount} from './appwrite'
-import {getTrendingMovies} from './appwrite'
-import './App.css'
-import Search from './components/search'
-import Spinner from './components/Spinner'
-import MovieCard from './components/MovieCard'
-import MoreRatedMovieBackdrop from "./components/MoreRatedMovie.jsx";
-import {API_BASE_URL, API_OPTIONS} from './apiConfig';
-import SortByMenu from "./components/SortByMenu.jsx";
-import ShowMoreMovies from "./components/ShowMoreMovies.jsx";
+import {updateSearchCount} from '../appwrite.js'
+import {getTrendingMovies} from '../appwrite.js'
+import '../App.css'
+import Search from '../components/Search.jsx'
+import Spinner from '../components/Spinner.jsx'
+import MovieCard from '../components/MovieCard.jsx'
+import MoreRatedMovieBackdrop from "../components/MoreRatedMovie.jsx";
+import {API_BASE_URL, API_OPTIONS} from '../apiConfig.js';
+import SortByMenu from "../components/SortByMenu.jsx";
+import ShowMoreMovies from "../components/ShowMoreMovies.jsx";
+import {useNavigate} from "react-router-dom";
 
 const App = () => {
+    const navigate = useNavigate();
     const [searchTerm, setSearchTerm] = useState('');
     const [errorMessage, setErrorMessage] = useState('');
     const [movieList, setMovieList] = useState([]);
@@ -90,7 +92,6 @@ const App = () => {
             console.error(`Error fetching trending movies: ${error}`);
         }
     }
-
 
     useEffect(() => {
         fetchAllMovies(debouncedSearchTerm, page);

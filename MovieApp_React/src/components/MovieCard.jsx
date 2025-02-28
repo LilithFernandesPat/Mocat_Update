@@ -1,9 +1,15 @@
-import React from 'react' 
+import React from 'react'
+import {useNavigate} from "react-router-dom";
 
 const MovieCard = ({movie
-    :{title, vote_average, poster_path, release_date, original_language}
+    :{id, title, vote_average, poster_path, release_date, original_language}
 }) => {
+    const navigate = useNavigate();
+    const onMovieClick = (id) => {
+        navigate(`/moviepage?movie.id=${id}`);
+    }
     return (
+        <button onClick={() => onMovieClick(id)}>
         <div className='movie-card'>
             <img src={poster_path ? `https://image.tmdb.org/t/p/w500/${poster_path}` : '/no-movie.png'} alt={title} />
             <div className='mt-4'>
@@ -24,6 +30,7 @@ const MovieCard = ({movie
                  </p>
             </div>
         </div>
+        </button>
     )
 }
 
