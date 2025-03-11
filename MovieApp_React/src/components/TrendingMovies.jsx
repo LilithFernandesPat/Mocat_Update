@@ -4,94 +4,47 @@ import {useNavigate} from "react-router-dom";
 import Carousel from "./TrendingMoviesView.jsx";
 
 
-const TrendingMovies = ({
-                                    movie: {
-                                        id,
-                                        title,
-                                        vote_average,
-                                        poster_path,
-                                        release_date,
-                                        original_language,
-                                        overview,
-                                        genre_ids,
-                                        vote_count
-                                    }
-                                }) => {
-    const [movieBackdrop, setMovieBackdrop] = useState([])
-    const [genres, setGenres] = useState([])
-    const [trailerId, setTrailerId] = useState([])
+const TrendingMovies = ({ movie }) => {
+    const { id, title, vote_average, poster_path, release_date, overview, genre_ids, vote_count } = movie;
+    const [movieBackdrop, setMovieBackdrop] = useState([]);
+    const [genres, setGenres] = useState([]);
+    const [trailerId, setTrailerId] = useState([]);
     const navigate = useNavigate();
+
     const onMovieClick = (id) => {
         navigate(`/moviepage?movie_id=${id}`);
     }
 
-    const fetchImages = async (movie_id) => {
-        if (!movie_id) return;
-
-        try {
-            const response = await fetch(`${API_BASE_URL}/movie/${movie_id}/images`, API_OPTIONS);
-
-            if (!response.ok) {
-                throw new Error('Failed to fetch images');
-            }
-
-            const data = await response.json();
-            setMovieBackdrop(data.backdrops || []);
-
-        } catch (error) {
-            console.error("Erro ao buscar imagens:", error);
-        }
-    }
-    const fetchGenre = async (movieGenreID) => {
-        if (!movieGenreID) return;
-        try {
-            const genreResponse = await fetch(`${API_BASE_URL}/genre/movie/list?language=en`, API_OPTIONS);
-
-            if (!genreResponse.ok) {
-                throw new Error('Failed to fetch genres');
-            }
-
-            const genreData = await genreResponse.json();
-            const movieGenres = genreData.genres.filter(genre => genre_ids.includes(genre.id));
-
-            setGenres(movieGenres.map(genre => genre.name));
-
-        } catch (error) {
-            console.error("Erro ao buscar generos:", error);
-        }
-    }
-
-    const fetchTrailer = async (movie_id) => {
-        if (!movie_id) return;
-        const responseTrailer = await fetch(`${API_BASE_URL}/movie/${movie_id}/videos?language=en-US`, API_OPTIONS);
-
-        if (!responseTrailer.ok) {
-            throw new Error('Failed to fetch trailers');
-        }
-
-        const dataTrailer = await responseTrailer.json();
-
-        //Pegando o trailer na Array de vídeos retornados
-        const trailer = dataTrailer.results.find(video =>
-            video.type === "Trailer" && video.site === "YouTube" && video.official
-        );
-        const fallbackTrailer = dataTrailer.results.find(video =>
-            video.type === "Trailer" && video.site === "YouTube"
-        );
-
-
-        setTrailerId(trailer || fallbackTrailer || []);
-
-
-
-
-    }
-
     useEffect(() => {
-        fetchImages(id);
-        fetchGenre(genre_ids);
-        fetchTrailer(id)
+        const fetchMovieData = async () => {
+            try {
+                // Fetch Images
+                const imageResponse = await fetch(`${API_BASE_URL}/movie/${id}/images`, API_OPTIONS);
+                const imageData = await imageResponse.json();
+                setMovieBackdrop(imageData.backdrops || []);
+
+                // Fetch Genres
+                const genreResponse = await fetch(`${API_BASE_URL}/genre/movie/list?language=en`, API_OPTIONS);
+                const genreData = await genreResponse.json();
+                const movieGenres = genreData.genres.filter((genre) => genre_ids.includes(genre.id));
+                setGenres(movieGenres.map((genre) => genre.name));
+
+                // Fetch Trailer
+                const trailerResponse = await fetch(`${API_BASE_URL}/movie/${id}/videos?language=en-US`, API_OPTIONS);
+                const trailerData = await trailerResponse.json();
+                const trailer = trailerData.results.find(
+                    (video) => video.type === 'Trailer' && video.site === 'YouTube' && video.official
+                );
+                setTrailerId(trailer || null);
+                console.log(trailer);
+            } catch (error) {
+                console.error('Erro ao buscar dados do filme:', error);
+            }
+        };
+
+        fetchMovieData();
     }, [id]);
+
 
     return (
 
@@ -115,7 +68,7 @@ const TrendingMovies = ({
                             {genres ? genres.join(' • ') : 'N/A'}
                       </span>
                     </div>
-                    <h2 className='text-7xl pt-2 pb-2 uppercase '>
+                    <h2 className='text-7xl pt-2 pb-2 uppercase line-clamp-1'>
                         <button className='hover:text-8xl hover:text-red-900 transition-all'
                                 onClick={() => onMovieClick(id)}>{title}</button>
                     </h2>

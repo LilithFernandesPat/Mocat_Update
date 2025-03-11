@@ -83,7 +83,7 @@
         }
 
         & p {
-            @apply backdrop-blur-sm;
+            @apply backdrop-blur-sm overflow-auto;
         }
 
         & .slide_poster {

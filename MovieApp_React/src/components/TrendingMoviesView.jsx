@@ -1,45 +1,33 @@
 import React, { useState } from 'react';
 
-const Carousel = ({ images }) => {
-
+const Carousel = ({ children }) => {
     const [currentIndex, setCurrentIndex] = useState(0);
+    const totalSlides = React.Children.count(children);
 
     const nextSlide = () => {
-        setCurrentIndex((prevIndex) => (prevIndex + 1) % images.length);
+        setCurrentIndex((prevIndex) => (prevIndex + 1) % totalSlides);
     };
 
     const prevSlide = () => {
-        setCurrentIndex((prevIndex) => (prevIndex - 1 + images.length) % images.length);
+        setCurrentIndex((prevIndex) => (prevIndex - 1 + totalSlides) % totalSlides);
     };
-    console.log(images);
+
     return (
-        <div className="relative w-full max-w-3xl mx-auto">
-            <div className="overflow-hidden relative h-64">
-                {images.map((image, index) => (
-                    <div
-                        key={index}
-                        className={`absolute inset-0 transition-transform transform ${
-                            index === currentIndex ? 'translate-x-0' : 'translate-x-full'
-                        }`}
-                    >
-                        <img
-                            src={`https://image.tmdb.org/t/p/original${image.file_path}`}
-                            alt={`Slide ${index}`}
-                            className="w-full h-full object-cover"
-                        />
-                    </div>
-                ))}
+        <div className="relative w-full ">
+            <div className="overflow-hidden relative max-h-[400px] sm:max-h-[300px] lg:max-h-[500px]">
+                <div className="flex transition-transform duration-500" style={{ transform: `translateX(-${currentIndex * 100}%)` }}>
+                    {React.Children.map(children, (child, index) => (
+                        <div key={index} className="w-full flex-shrink-0">
+                            {child}
+                        </div>
+                    ))}
+                </div>
             </div>
-            <button
-                className="absolute top-1/2 left-0 transform -translate-y-1/2 bg-gray-800 text-white p-2"
-                onClick={prevSlide}
-            >
+
+            <button className="absolute top-1/2 left-0 transform -translate-y-1/2 bg-gray-800 text-white p-2" onClick={prevSlide}>
                 Prev
             </button>
-            <button
-                className="absolute top-1/2 right-0 transform -translate-y-1/2 bg-gray-800 text-white p-2"
-                onClick={nextSlide}
-            >
+            <button className="absolute top-1/2 right-0 transform -translate-y-1/2 bg-gray-800 text-white p-2" onClick={nextSlide}>
                 Next
             </button>
         </div>
