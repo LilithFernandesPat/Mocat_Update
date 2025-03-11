@@ -1,4 +1,4 @@
-import React, {useEffect, useState} from 'react'
+import React, {useEffect, useRef, useState} from 'react'
 import {API_BASE_URL, API_OPTIONS} from '../apiConfig';
 import {useNavigate} from "react-router-dom";
 import Carousel from "./TrendingMoviesView.jsx";
@@ -15,7 +15,7 @@ const TrendingMovies = ({ movie }) => {
         navigate(`/moviepage?movie_id=${id}`);
     }
 
-    useEffect(() => {
+        useEffect(() => {
         const fetchMovieData = async () => {
             try {
                 // Fetch Images
@@ -64,15 +64,15 @@ const TrendingMovies = ({ movie }) => {
                         <p className='text-xl font-extrabold hidden sm:block'>
                             {release_date ? release_date.split('-')[0] : 'N/A'}
                         </p>
-                        <span className='font-black text-red-900 text-xl uppercase hidden sm:block'>
+                        <p className='font-black text-red-900 text-xl uppercase hidden sm:block'>
                             {genres ? genres.join(' • ') : 'N/A'}
-                      </span>
+                        </p>
                     </div>
-                    <h2 className='text-7xl pt-2 pb-2 uppercase line-clamp-1'>
+                    <h2 className='text-4xl md:text-7xl cont pt-2 pb-2 uppercase  max-h-[160px] md:max-h-full overflow-clip'>
                         <button className='hover:text-8xl hover:text-red-900 transition-all'
                                 onClick={() => onMovieClick(id)}>{title}</button>
                     </h2>
-                    <p className='text-0.5 hidden lg:block md:block'>
+                    <p>
                         {overview ? overview : 'N/A'}
                     </p>
                 </div>
@@ -91,7 +91,6 @@ const TrendingMovies = ({ movie }) => {
                     {vote_count ? `${vote_count} votes` : 'N/A'}
                 </div>
             </div>
-            <Carousel images={movieBackdrop} />
         </div>
 
     )

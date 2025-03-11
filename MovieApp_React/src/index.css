@@ -81,9 +81,11 @@
         & .slideContent {
             @apply lg:col-span-6 m-2 flex-row md:p-4 col-span-full content-center max-w-3/4 mb-40 z-10 ;
         }
-
+        & h2{
+            @apply drop-shadow-[0_1.2px_1.2px_rgba(0,0,0,0.8)];
+        }
         & p {
-            @apply backdrop-blur-sm overflow-auto;
+            @apply drop-shadow-[0_1.2px_1.2px_rgba(0,0,0,0.8)]  hidden lg:block ;
         }
 
         & .slide_poster {

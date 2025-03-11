@@ -14,8 +14,8 @@ const Carousel = ({ children }) => {
 
     return (
         <div className="relative w-full ">
-            <div className="overflow-hidden relative max-h-[400px] sm:max-h-[300px] lg:max-h-[500px]">
-                <div className="flex transition-transform duration-500" style={{ transform: `translateX(-${currentIndex * 100}%)` }}>
+            <div className="overflow-hidden relative max-h-[340px] sm:max-h-[300px] lg:max-h-[500px]">
+                <div className="flex transition-transform  duration-500" style={{ transform: `translateX(-${currentIndex * 100}%)` }}>
                     {React.Children.map(children, (child, index) => (
                         <div key={index} className="w-full flex-shrink-0">
                             {child}
