@@ -23,7 +23,7 @@
     body {
         font-family: "DM Sans", serif;
         font-optical-sizing: auto;
-        background: #030014;
+        background: #000000;
         background-image: linear-gradient(139deg, black 70%, var(--color-Licorice) 100%);
     }
 
@@ -111,12 +111,11 @@
 
 
     .searchTermsContainer {
-        @apply grid grid-cols-6 justify-center;
+        @apply flex flex-row ;
     }
     .search {
         @apply w-full bg-orange/5 px-4 py-3 rounded-lg mt-10 max-w-3xl mx-auto;
-        @apply grid col-span-full lg:col-span-5;
-
+        /*@apply grid col-span-full lg:col-span-5;*/
         & div {
             @apply relative flex items-center;
         }

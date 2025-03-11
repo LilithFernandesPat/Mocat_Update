@@ -1,4 +1,4 @@
-import {useEffect, useState} from 'react'
+import React, {useEffect, useState} from 'react'
 import {useDebounce} from 'react-use';
 import {updateSearchCount} from '../appwrite.js'
 import {getTrendingMovies} from '../appwrite.js'
@@ -6,11 +6,12 @@ import '../App.css'
 import Search from '../components/Search.jsx'
 import Spinner from '../components/Spinner.jsx'
 import MovieCard from '../components/MovieCard.jsx'
-import MoreRatedMovieBackdrop from "../components/MoreRatedMovie.jsx";
 import {API_BASE_URL, API_OPTIONS} from '../apiConfig.js';
 import SortByMenu from "../components/SortByMenu.jsx";
+import CategoryMenu from "../components/CategoryMenu.jsx";
 import ShowMoreMovies from "../components/ShowMoreMovies.jsx";
 import {useNavigate} from "react-router-dom";
+import TrendingMovies from "../components/TrendingMovies.jsx";
 
 const App = () => {
     const navigate = useNavigate();
@@ -23,7 +24,7 @@ const App = () => {
     const [mostTrendingMovie, setMostTrendingMovie] = useState([]);
     const [sortBy, setSortBy] = useState("popularity.desc");
     const [page, setPage] = useState(1);
-
+    const [genreId, setGenreId] = useState()
     useDebounce(() => setDebouncedSearchTerm(searchTerm), 500, [searchTerm])
 
     const fetchTrendingMovie = async () => {
@@ -35,15 +36,16 @@ const App = () => {
             if (!mostTrendingMovieResponse.ok) {
                 throw new Error('failed')
             }
+
             const mostTrendingMovieData = await mostTrendingMovieResponse.json();
 
-            if (mostTrendingMovieData.response === 'false') {
+            if (mostTrendingMovieData.response === false) {
                 setErrorMessage(mostTrendingMovieData.Error || 'failed to fetch trending movie');
                 setMostTrendingMovie([]);
                 return;
             }
 
-            setMostTrendingMovie(mostTrendingMovieData.results[0] || []);
+            setMostTrendingMovie(mostTrendingMovieData.results || []);
         } catch (error) {
             console.log(error);
         }
@@ -53,9 +55,12 @@ const App = () => {
         setIsLoading(true);
         setErrorMessage('');
         try {
-            const endPoint = query
-                ? `${API_BASE_URL}/search/movie?page=${nextPage}&query=${encodeURIComponent(query)}`
-                : `${API_BASE_URL}/discover/movie?page=${nextPage}&sort_by=${sortBy}`
+            const endPoint = genreId
+                ? `${API_BASE_URL}/discover/movie?page=${nextPage}&sort_by=${sortBy}&with_genres=${genreId}`
+                : query
+                    ? `${API_BASE_URL}/search/movie?page=${nextPage}&query=${encodeURIComponent(query)}`
+                    : `${API_BASE_URL}/discover/movie?page=${nextPage}&sort_by=${sortBy}`;
+
             const response = await fetch(endPoint, API_OPTIONS);
 
             if (!response.ok) {
@@ -64,7 +69,7 @@ const App = () => {
 
             const data = await response.json();
 
-            if (data.response === 'false') {
+            if (data.response === false) {
                 setErrorMessage(data.Error || 'failed to fetch movies');
                 setMovieList([]);
                 return;
@@ -95,7 +100,7 @@ const App = () => {
 
     useEffect(() => {
         fetchAllMovies(debouncedSearchTerm, page);
-    }, [sortBy, page, debouncedSearchTerm])
+    }, [sortBy, page, debouncedSearchTerm, genreId])
 
     useEffect(() => {
         loadTrendingMovies();
@@ -107,7 +112,7 @@ const App = () => {
     return (
         <main>
             <header className='m-0'>
-                < MoreRatedMovieBackdrop movie={mostTrendingMovie}/>
+                < TrendingMovies movie={mostTrendingMovie}/>
             </header>
 
             <div className='wrapper pt-0'>
@@ -127,9 +132,12 @@ const App = () => {
                 {/*</section>*/}
                 {/*)}*/}
                 <section className='all-movies'>
-                    <div className='searchTermsContainer'>
+
                         <Search searchTerm={searchTerm} setSearchTerm={setSearchTerm}/>
+                    <div className='searchTermsContainer'>
                         <SortByMenu sortBy={sortBy} setSortBy={setSortBy}/>
+                        <CategoryMenu genreId={genreId} setGenreId={setGenreId}/>
+
                     </div>
 
                     <h2>All Movies</h2>
@@ -146,7 +154,6 @@ const App = () => {
                     <ShowMoreMovies page={page} setPage={setPage}/>
                 </section>
             </div>
-
         </main>
     )
 }

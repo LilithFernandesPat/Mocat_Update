@@ -6,11 +6,11 @@ const MovieCard = ({movie
 }) => {
     const navigate = useNavigate();
     const onMovieClick = (id) => {
-        navigate(`/moviepage?movie.id=${id}`);
+        navigate(`/moviepage?movie_id=${id}`);
     }
     return (
         <button onClick={() => onMovieClick(id)}>
-        <div className='movie-card'>
+        <div className='movie-card '>
             <img src={poster_path ? `https://image.tmdb.org/t/p/w500/${poster_path}` : '/no-movie.png'} alt={title} />
             <div className='mt-4'>
                 <h3>{title}</h3>

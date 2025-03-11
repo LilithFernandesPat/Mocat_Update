@@ -2,7 +2,6 @@ import React from "react";
 
 const SortByMenu = ({ sortBy, setSortBy }) => {
     return (
-
         <div className="sort_by_menu ">
             <label htmlFor="sort">
               Sort By
@@ -20,5 +19,6 @@ const SortByMenu = ({ sortBy, setSortBy }) => {
                 <option value="vote_average.asc">Lowest Rated</option>
             </select>
         </div>
+
     )}
 export default SortByMenu;

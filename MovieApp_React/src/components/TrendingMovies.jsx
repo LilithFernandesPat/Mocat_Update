@@ -1,9 +1,10 @@
 import React, {useEffect, useState} from 'react'
 import {API_BASE_URL, API_OPTIONS} from '../apiConfig';
 import {useNavigate} from "react-router-dom";
+import Carousel from "./TrendingMoviesView.jsx";
 
 
-const MoreRatedMovieBackdrop = ({
+const TrendingMovies = ({
                                     movie: {
                                         id,
                                         title,
@@ -21,20 +22,21 @@ const MoreRatedMovieBackdrop = ({
     const [trailerId, setTrailerId] = useState([])
     const navigate = useNavigate();
     const onMovieClick = (id) => {
-        navigate(`/moviepage?movie.id=${id}`);
+        navigate(`/moviepage?movie_id=${id}`);
     }
-    const fetchImages = async (movieID) => {
-        if (!movieID) return;
+
+    const fetchImages = async (movie_id) => {
+        if (!movie_id) return;
 
         try {
-            const response = await fetch(`${API_BASE_URL}/movie/${movieID}/images`, API_OPTIONS);
+            const response = await fetch(`${API_BASE_URL}/movie/${movie_id}/images`, API_OPTIONS);
 
             if (!response.ok) {
                 throw new Error('Failed to fetch images');
             }
 
             const data = await response.json();
-            setMovieBackdrop(data.backdrops[0] || []);
+            setMovieBackdrop(data.backdrops || []);
 
         } catch (error) {
             console.error("Erro ao buscar imagens:", error);
@@ -58,33 +60,47 @@ const MoreRatedMovieBackdrop = ({
             console.error("Erro ao buscar generos:", error);
         }
     }
-    const fetchTrailer = async (movieID) => {
-        if (!movieID) return;
-        const responseTrailer = await fetch(`${API_BASE_URL}/movie/${movieID}/videos?language=en-US`, API_OPTIONS);
+
+    const fetchTrailer = async (movie_id) => {
+        if (!movie_id) return;
+        const responseTrailer = await fetch(`${API_BASE_URL}/movie/${movie_id}/videos?language=en-US`, API_OPTIONS);
 
         if (!responseTrailer.ok) {
             throw new Error('Failed to fetch trailers');
         }
 
         const dataTrailer = await responseTrailer.json();
-        setTrailerId(dataTrailer.results[0] || []);
 
-        console.log(dataTrailer.results);
+        //Pegando o trailer na Array de vídeos retornados
+        const trailer = dataTrailer.results.find(video =>
+            video.type === "Trailer" && video.site === "YouTube" && video.official
+        );
+        const fallbackTrailer = dataTrailer.results.find(video =>
+            video.type === "Trailer" && video.site === "YouTube"
+        );
+
+
+        setTrailerId(trailer || fallbackTrailer || []);
+
+
+
 
     }
+
     useEffect(() => {
         fetchImages(id);
         fetchGenre(genre_ids);
         fetchTrailer(id)
     }, [id]);
+
     return (
 
         <div className="slide"
              style={{
-                 backgroundImage: `url(${movieBackdrop.file_path ? `https://image.tmdb.org/t/p/original/${movieBackdrop.file_path}` : '/no-movie.png'})`,
+                 backgroundImage: `url(${movieBackdrop?.[0]?.file_path ? `https://image.tmdb.org/t/p/original/${movieBackdrop[0].file_path}` : '/no-movie.png'})`,
              }}>
 
-                <img className='slide_poster'
+            <img className='slide_poster'
                  src={poster_path ? `https://image.tmdb.org/t/p/w500/${poster_path}` : '/no-movie.png'}
                  alt={title}
             />
@@ -99,7 +115,10 @@ const MoreRatedMovieBackdrop = ({
                             {genres ? genres.join(' • ') : 'N/A'}
                       </span>
                     </div>
-                    <h2 className='text-7xl pt-2 pb-2 uppercase '> <button className='hover:text-8xl hover:text-red-900 transition-all' onClick={() => onMovieClick(id)}>{title}</button></h2>
+                    <h2 className='text-7xl pt-2 pb-2 uppercase '>
+                        <button className='hover:text-8xl hover:text-red-900 transition-all'
+                                onClick={() => onMovieClick(id)}>{title}</button>
+                    </h2>
                     <p className='text-0.5 hidden lg:block md:block'>
                         {overview ? overview : 'N/A'}
                     </p>
@@ -108,10 +127,10 @@ const MoreRatedMovieBackdrop = ({
                 <div className='rating text-white justify-self-end  mt-10 font-extrabold gap-3'>
                     <div className='watch_trailer'>
                         <a href={`https://www.youtube.com/watch?v=${trailerId.key}`} target='_blank'>
-                        <button>
-                            <img src="play-button.svg" alt=""/>Watch trailer
-                        </button>
-                    </a>
+                            <button>
+                                <img src="play-button.svg" alt=""/>Watch trailer
+                            </button>
+                        </a>
                     </div>
                     <img src="star.svg" alt="star_icon"/>
                     {vote_average ? vote_average.toFixed(1) : 'N/A'}
@@ -119,10 +138,11 @@ const MoreRatedMovieBackdrop = ({
                     {vote_count ? `${vote_count} votes` : 'N/A'}
                 </div>
             </div>
+            <Carousel images={movieBackdrop} />
         </div>
 
     )
 
 }
 
-export default MoreRatedMovieBackdrop;
+export default TrendingMovies;
