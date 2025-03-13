@@ -35,8 +35,11 @@ const TrendingMovies = ({ movie }) => {
                 const trailer = trailerData.results.find(
                     (video) => video.type === 'Trailer' && video.site === 'YouTube' && video.official
                 );
-                setTrailerId(trailer || null);
-                console.log(trailer);
+                const trailerAlternate = trailerData.results.find(
+                    (video) => video.type === 'Trailer' && video.site === 'YouTube'
+                );
+                setTrailerId(trailer || trailerAlternate || null);
+                console.log(trailer)
             } catch (error) {
                 console.error('Erro ao buscar dados do filme:', error);
             }
@@ -48,7 +51,7 @@ const TrendingMovies = ({ movie }) => {
 
     return (
 
-        <div className="slide"
+        <div className="slide shadow-[inset_0px_-104px_80px_-3px_#000]"
              style={{
                  backgroundImage: `url(${movieBackdrop?.[0]?.file_path ? `https://image.tmdb.org/t/p/original/${movieBackdrop[0].file_path}` : '/no-movie.png'})`,
              }}>
@@ -57,7 +60,6 @@ const TrendingMovies = ({ movie }) => {
                  src={poster_path ? `https://image.tmdb.org/t/p/w500/${poster_path}` : '/no-movie.png'}
                  alt={title}
             />
-
             <div className='slideContent w-full h-full'>
                 <div className='justify-start text-white'>
                     <div className='flex justify-between '>
@@ -68,8 +70,8 @@ const TrendingMovies = ({ movie }) => {
                             {genres ? genres.join(' • ') : 'N/A'}
                         </p>
                     </div>
-                    <h2 className='text-4xl md:text-7xl cont pt-2 pb-2 uppercase  max-h-[160px] md:max-h-full overflow-clip'>
-                        <button className='hover:text-8xl hover:text-red-900 transition-all'
+                    <h2 className='text-4xl md:text-7xl pt-2 pb-2 uppercase  max-h-[160px] md:max-h-full overflow-hidden whitespace-nowrap '>
+                        <button className='hover:text-[74px] hover:text-red-900 transition-all'
                                 onClick={() => onMovieClick(id)}>{title}</button>
                     </h2>
                     <p>
@@ -79,7 +81,7 @@ const TrendingMovies = ({ movie }) => {
 
                 <div className='rating text-white justify-self-end  mt-10 font-extrabold gap-3'>
                     <div className='watch_trailer'>
-                        <a href={`https://www.youtube.com/watch?v=${trailerId.key}`} target='_blank'>
+                        <a href={`https://www.youtube.com/watch?v=${trailerId?.key || ''}`} target='_blank'>
                             <button>
                                 <img src="play-button.svg" alt=""/>Watch trailer
                             </button>

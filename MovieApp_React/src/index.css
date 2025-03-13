@@ -55,25 +55,7 @@
         @apply px-5 py-12 xs:p-10 max-w-7xl mx-auto flex flex-col relative z-10;
     }
 
-    .trending {
-        @apply mt-20;
 
-        & ul {
-            @apply flex flex-row overflow-y-auto gap-5 -mt-10 w-full hide-scrollbar;
-        }
-
-        & ul li {
-            @apply min-w-[230px] flex flex-row items-center;
-        }
-
-        & ul li p {
-            @apply fancy-text mt-[22px] text-nowrap;
-        }
-
-        & ul li img {
-            @apply w-[127px] h-[163px] rounded-lg object-cover -ml-3.5;
-        }
-    }
 
     .slide {
         @apply bg-cover bg-center h-auto w-full sm:min-h-[300px] md:min-h-[500px] grid grid-cols-8 bg-fixed ;
@@ -89,7 +71,7 @@
         }
 
         & .slide_poster {
-            @apply hidden lg:block lg:max-w-64 lg:col-span-2 mb-9 rounded-xl p-2 shadow-inner shadow-red-950 z-0 block self-end content-center;
+            @apply hidden lg:block lg:max-w-64 lg:col-span-2 mt-10 rounded-xl p-2 shadow-inner shadow-red-950 z-0 block self-center content-center;
         }
         & .watch_trailer button {
             @apply flex flex-row items-center gap-2 relative h-11 overflow-hidden rounded-4xl bg-rust px-6 py-3.5 text-white transition-all duration-300 hover:bg-red-600 hover:ring-2 hover:ring-neutral-800 hover:ring-offset-2
@@ -147,7 +129,7 @@
         }
 
         & select option {
-            @apply text-rust;
+            @apply text-rust ;
         }
 
         & select {
