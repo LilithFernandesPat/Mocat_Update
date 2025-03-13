@@ -1,13 +1,14 @@
-O propósito do desenvolvimento deste site é aprofundar meu conhecimento de React e Tailwind.
+ O propósito do desenvolvimento deste site é aprofundar meu conhecimento de React e Tailwind.
 
-Elementos:
+  Elementos:
 
-Um carrossel que apresenta os 5 filmes que estão em "trending" no dia, contem o Titulo, backdrop, poster, gêneros, data de lançamento, um botão que leva para um trailer no youtube, nota e contagem de votos.
-Termos de pesquisa, com uma área para pesquisar o filme pelo título, ou selecionar como preencher a lista de filmes;
-Lista de filmes com o poster, título, data, linguagem e votos.
-botão "show more" estilizado que ao clicar, adiciona filmes na lista sem remover os que já estavam nela.
-Considerações:
+  - Um carrossel que apresenta os 5 filmes que estão em "trending" no dia, contem o Titulo, backdrop, poster, gêneros, data de lançamento, um botão que leva para um trailer no youtube, nota e contagem de votos.
+  - Termos de pesquisa, com uma área para pesquisar o filme pelo título, ou selecionar como preencher a lista de filmes;
+  - Lista de filmes com o poster, título, data, linguagem e votos.
+  - botão "show more" estilizado que ao clicar, adiciona filmes na lista sem remover os que já estavam nela.
 
-Todo o site foi estilizado por mim exceto o movie card, todo o código foi escrito por mim.
-Fiz o meu melhor para deixar o código limpo, sem repetições desnecesárias.
-Caso tenha alguma critica construtiva, fique a vontade para me contatar, procuro melhorar a cada dia;
+
+  Considerações:
+  - Todo o site foi estilizado por mim exceto o movie card, todo o código foi escrito por mim.
+  - Fiz o meu melhor para deixar o código limpo, sem repetições desnecesárias.
+  - Caso tenha alguma critica construtiva, fique a vontade para me contatar, procuro melhorar a cada dia;
