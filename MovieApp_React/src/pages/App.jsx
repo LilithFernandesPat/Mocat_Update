@@ -46,7 +46,7 @@ const App = () => {
                 return;
             }
 
-            setTrendingMovie(TrendingMovieData.results || []);
+            setTrendingMovie((TrendingMovieData.results).slice(0,10)|| []);
         } catch (error) {
             console.log(error);
         }

@@ -9,6 +9,7 @@ const MovieDetailsView = ({movieDetails, setIsLoading, movieTrailer}) => {
     if (!movieDetails || Object.keys(movieDetails).length === 0 || !movieTrailer) {
         return setIsLoading(true);
     }
+
     setIsLoading(false);
     return (
         <div
@@ -18,8 +19,8 @@ const MovieDetailsView = ({movieDetails, setIsLoading, movieTrailer}) => {
         }}>
             <div className='title_box col-span-full self-end flex items-center justify-between px-40 text-white'>
                 <h3 className='text-5xl font-extralight'>{movieDetails.title} ({movieDetails.release_date ? movieDetails.release_date.split('-')[0] : 'N/A'})</h3>
-                <a href={`https://www.youtube.com/watch?v=${movieTrailer.key}`} target={"_blank"}>Ver Trailer</a>
-                <a href={`${movieDetails.homepage}`} target={"_blank"}>Ver Filme</a>
+                {movieTrailer.key ? <a href={`https://www.youtube.com/watch?v=${movieTrailer.key}`} target={"_blank"}>Watch Trailer</a> : ''}
+                {movieDetails.homepage ? <a href={`${movieDetails.homepage}`} target={"_blank"}>Watch Film</a> : ''}
             </div>
         </div>
     )
