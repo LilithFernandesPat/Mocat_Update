@@ -2,7 +2,10 @@ import React, {useEffect, useState} from "react";
 import CategoryMenuMobileView from "./CategoryMenuMobileView.jsx";
 import CategoryMenuView from "./CategoryMenuView.jsx";
 
+//CategoryMenu show genre options then set the genre type to fetch in app
 const CategoryMenu = ({ genreId, setGenreId }) => {
+    //#region Handle Window Resize
+
     const [isMobile, setIsMobile] = useState(window.innerWidth <= 768);
     const [isModalOpen, setIsModalOpen] = useState(false);
 
@@ -13,8 +16,9 @@ const CategoryMenu = ({ genreId, setGenreId }) => {
         window.addEventListener("resize", handleResize);
         return () => window.removeEventListener("resize", handleResize);
     }, []);
+    //#endregion
 
-    // Lista de categorias
+    //#region category list
     const categories = [
         { id: "28", name: "Action" },
         { id: "12", name: "Adventure" },
@@ -23,9 +27,10 @@ const CategoryMenu = ({ genreId, setGenreId }) => {
         { id: "80", name: "Crime" },
         { id: "99", name: "Documentary" },
     ];
-
+    //#endregion
     return (
         <div className="sort_by_menu">
+            {/*Show different in mobile*/}
             {isMobile ? (
                 <>
                     <button

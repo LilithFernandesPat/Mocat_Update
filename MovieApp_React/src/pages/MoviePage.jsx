@@ -8,7 +8,6 @@ import Spinner from "../components/Spinner.jsx";
 const MoviePage = () => {
     const [searchParams] = useSearchParams();
     const movie_id = searchParams.get("movie_id");
-
     const [isLoading, setIsLoading] = useState(false);
     const [movieDetails, setMovieDetails] = useState(null);
     const [errorMessage, setErrorMessage] = useState('');

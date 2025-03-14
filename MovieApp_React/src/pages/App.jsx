@@ -1,7 +1,6 @@
 import React, {useEffect, useState} from 'react'
 import {useDebounce} from 'react-use';
 import {updateSearchCount} from '../appwrite.js'
-import {getTrendingMovies} from '../appwrite.js'
 import '../App.css'
 import Search from '../components/Search.jsx'
 import Spinner from '../components/Spinner.jsx'
@@ -12,10 +11,12 @@ import CategoryMenu from "../components/CategoryMenu.jsx";
 import ShowMoreMovies from "../components/ShowMoreMovies.jsx";
 import {useNavigate} from "react-router-dom";
 import TrendingMovies from "../components/TrendingMovies.jsx";
-import trendingMovies from "../components/TrendingMovies.jsx";
 import Carousel from "../components/TrendingMoviesView.jsx";
 
+ //main page, fetch movie data and call components to show it
 const App = () => {
+
+    //#region Attributes
     const navigate = useNavigate();
     const [searchTerm, setSearchTerm] = useState('');
     const [errorMessage, setErrorMessage] = useState('');
@@ -27,7 +28,9 @@ const App = () => {
     const [page, setPage] = useState(1);
     const [genreId, setGenreId] = useState()
     useDebounce(() => setDebouncedSearchTerm(searchTerm), 500, [searchTerm])
+    //#endregion
 
+    //#region FetchingData
     const fetchTrendingMovie = async () => {
         setIsLoading(true);
         setErrorMessage('');
@@ -89,18 +92,19 @@ const App = () => {
             setIsLoading(false);
         }
     }
+    //#endregion
 
+    //#region UseEffects
     useEffect(() => {
         fetchAllMovies(debouncedSearchTerm, page);
     }, [sortBy, page, debouncedSearchTerm, genreId])
-
     useEffect(() => {
         fetchTrendingMovie();
     }, [])
-
     useEffect(() => {
         setPage(1);
     }, [sortBy, debouncedSearchTerm]);
+    //#endregion
 
     return (
         <main>
@@ -111,29 +115,31 @@ const App = () => {
                     ))}
                 </Carousel>
             </header>
-
             <div className='wrapper pt-0'>
 
                 <section className='all-movies'>
 
                         <Search searchTerm={searchTerm} setSearchTerm={setSearchTerm}/>
+
                     <div className='searchTermsContainer'>
                         <SortByMenu sortBy={sortBy} setSortBy={setSortBy}/>
                         <CategoryMenu genreId={genreId} setGenreId={setGenreId}/>
-
                     </div>
 
                     <h2>All Movies</h2>
+
                     <ul>
                         {movieList.map((movie) => (
                             <MovieCard key={movie.id} movie={movie}/>
                         ))}
                     </ul>
+
                     {isLoading ? (
                             <Spinner />
-                        ):
+                        ) :
                         errorMessage
                     }
+
                     <ShowMoreMovies page={page} setPage={setPage}/>
                 </section>
             </div>
