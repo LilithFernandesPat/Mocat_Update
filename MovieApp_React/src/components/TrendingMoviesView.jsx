@@ -1,9 +1,13 @@
 import React, {useEffect, useState} from 'react';
 
 const Carousel = ({ children, autoSlide = true, autoSlideInterval = 30000 }) => {
+
+    //#region Atributes
     const [currentIndex, setCurrentIndex] = useState(0);
     const totalSlides = React.Children.count(children);
+    //#endregion
 
+    //#region Slide change logic
     useEffect(() => {
         if (autoSlide) {
             const slideInterval = setInterval(() => {
@@ -20,6 +24,7 @@ const Carousel = ({ children, autoSlide = true, autoSlideInterval = 30000 }) => 
     const prevSlide = () => {
         setCurrentIndex((prevIndex) => (prevIndex - 1 + totalSlides) % totalSlides);
     };
+    //#endregion
 
     return (
         <div className="relative w-full ">

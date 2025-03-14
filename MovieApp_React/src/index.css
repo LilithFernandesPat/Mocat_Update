@@ -58,7 +58,7 @@
 
 
     .slide {
-        @apply bg-cover bg-center h-auto w-full sm:min-h-[300px] md:min-h-[500px] grid grid-cols-8 bg-fixed ;
+        @apply bg-cover bg-center h-auto w-full sm:min-h-[300px] md:min-h-[500px] grid grid-cols-8 bg-fixed shadow-[inset_0px_-104px_80px_-3px_#000];
 
         & .slideContent {
             @apply lg:col-span-6 m-2 flex-row md:p-4 col-span-full content-center max-w-3/4 mb-40 z-10 ;

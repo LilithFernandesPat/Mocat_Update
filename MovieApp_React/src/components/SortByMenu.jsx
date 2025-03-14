@@ -2,6 +2,8 @@ import React, {useEffect, useState} from "react";
 import SortByMenuMobileView from "./SortByMenuMobileView.jsx";
 
 const SortByMenu = ({sortBy, setSortBy}) => {
+
+    //#region Handle Window Resize
     const [isMobile, setIsMobile] = useState(window.innerWidth <= 768);
     const [isModalOpen, setIsModalOpen] = useState(false);
 
@@ -10,6 +12,7 @@ const SortByMenu = ({sortBy, setSortBy}) => {
         window.addEventListener("resize", handleResize);
         return () => window.removeEventListener("resize", handleResize);
     }, []);
+    //#endregion
 
     return (
         <div className="sort_by_menu ">

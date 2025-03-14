@@ -3,18 +3,21 @@ import {API_BASE_URL, API_OPTIONS} from '../apiConfig';
 import {useNavigate} from "react-router-dom";
 import Carousel from "./TrendingMoviesView.jsx";
 
-
+//Code to fetch movie data from a list of movies
 const TrendingMovies = ({ movie }) => {
+
+    //#region Attributes
     const { id, title, vote_average, poster_path, release_date, overview, genre_ids, vote_count } = movie;
     const [movieBackdrop, setMovieBackdrop] = useState([]);
     const [genres, setGenres] = useState([]);
     const [trailerId, setTrailerId] = useState([]);
     const navigate = useNavigate();
-
+    //#endregion
     const onMovieClick = (id) => {
         navigate(`/moviepage?movie_id=${id}`);
     }
 
+    //#region Fetching Data
         useEffect(() => {
         const fetchMovieData = async () => {
             try {
@@ -47,11 +50,11 @@ const TrendingMovies = ({ movie }) => {
 
         fetchMovieData();
     }, [id]);
-
+    //#endregion
 
     return (
 
-        <div className="slide shadow-[inset_0px_-104px_80px_-3px_#000]"
+        <div className="slide "
              style={{
                  backgroundImage: `url(${movieBackdrop?.[0]?.file_path ? `https://image.tmdb.org/t/p/original/${movieBackdrop[0].file_path}` : '/no-movie.png'})`,
              }}>
@@ -70,7 +73,7 @@ const TrendingMovies = ({ movie }) => {
                             {genres ? genres.join(' • ') : 'N/A'}
                         </p>
                     </div>
-                    <h2 className='text-4xl md:text-7xl pt-2 pb-2 uppercase  max-h-[160px] md:max-h-full overflow-hidden whitespace-nowrap '>
+                    <h2 className='text-4xl md:text-7xl pt-2 pb-2 uppercase  max-h-[160px] md:max-h-full overflow-hidden whitespace-nowrap'>
                         <button className='hover:text-[74px] hover:text-red-900 transition-all'
                                 onClick={() => onMovieClick(id)}>{title}</button>
                     </h2>
