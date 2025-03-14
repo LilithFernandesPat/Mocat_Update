@@ -6,9 +6,14 @@
   - Termos de pesquisa, com uma área para pesquisar o filme pelo título, ou selecionar como preencher a lista de filmes;
   - Lista de filmes com o poster, título, data, linguagem e votos.
   - botão "show more" estilizado que ao clicar, adiciona filmes na lista sem remover os que já estavam nela.
-
+  - o site é completamente responsivo.
 
   Considerações:
   - Todo o site foi estilizado por mim exceto o movie card, todo o código foi escrito por mim.
   - Fiz o meu melhor para deixar o código limpo, sem repetições desnecesárias.
   - Caso tenha alguma critica construtiva, fique a vontade para me contatar, procuro melhorar a cada dia;
+
+  Para abrir o site 
+   - Clone o repositório
+   - no terminal digite "cd MovieApp_React"
+   - em seguida digite "npm run dev"
