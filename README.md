@@ -2,7 +2,7 @@
 
   Elementos:
 
-  - Um carrossel que apresenta os 5 filmes que estão em "trending" no dia, contem o Titulo, backdrop, poster, gêneros, data de lançamento, um botão que leva para um trailer no youtube, nota e contagem de votos.
+  - Um carrossel que apresenta os 10 filmes que estão em "trending" no dia, contem o Titulo, backdrop, poster, gêneros, data de lançamento, um botão que leva para um trailer no youtube, nota e contagem de votos.
   - Termos de pesquisa, com uma área para pesquisar o filme pelo título, ou selecionar como preencher a lista de filmes;
   - Lista de filmes com o poster, título, data, linguagem e votos.
   - botão "show more" estilizado que ao clicar, adiciona filmes na lista sem remover os que já estavam nela.
